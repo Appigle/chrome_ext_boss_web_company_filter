@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "BOSS_WEB COMPANY FILTER",
+  "description": "Remove the display of specific companies returned from the BOSS server side!",
+  "version": "0.9.0",
+  "author": "ray.chenley.up@gmail.com",
+  "icons": {
+    "16": "images/Boss_16.png",
+    "32": "images/Boss_32.png",
+    "48": "images/Boss_48.png",
+    "128": "images/Boss_128.png"
+  },
+  "background": {
+    "service_worker": "scripts/contextMenu.js"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "scripts/index.js"
+      ],
+      "matches": [
+        "https://www.zhipin.com/*"
+      ]
+    }
+  ],
+  "short_name": "BWCF",
+  "permissions": [
+    "contextMenus",
+    "storage"
+  ]
+}
