@@ -1,3 +1,9 @@
+# Readme
+
+---
+
+[English](README.md) | [中文](README_cn.md)
+
 # Company Filter Chrome Extension
 
 The Company Filter Chrome extension allows users to block specific companies from being displayed on a web-based job recruitment platform. It provides a convenient way to filter out unwanted companies and enhance the job search experience.
