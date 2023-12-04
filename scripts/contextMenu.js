@@ -1,7 +1,7 @@
 const MESSAGE_TYPE = {
   ADD: 'FILTER_COMPANY_NAME_ADD',
   CLEAR: 'FILTER_COMPANY_NAME_CLEAR',
-  SELECTION: 'PAGE_CONTENT_SELECTION',
+  DELETE: 'FILTER_COMPANY_NAME_DELETE',
 };
 
 const CUSTOM_MENU_ID = {
@@ -37,15 +37,14 @@ async function genericOnClick(info) {
 }
 
 chrome.runtime.onInstalled.addListener(function () {
-  let context = 'selection';
   chrome.contextMenus.create({
     title: '屏蔽公司: %s',
-    contexts: [context],
+    contexts: ['selection'],
     id: `${CUSTOM_MENU_ID.Filter_Key_Words}_ADD`,
   });
   chrome.contextMenus.create({
     title: '移除全部屏蔽公司',
-    contexts: [context],
+    contexts: ['all'],
     id: `${CUSTOM_MENU_ID.Filter_Key_Words}_CLEAR`,
   });
 

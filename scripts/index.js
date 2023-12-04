@@ -1,10 +1,10 @@
-const FILTER_COMPANY_NAMES = '';
 const STORAGE_KEY = {
   FILTER_COMPANY_NAMES: 'FILTER_COMPANY_NAMES',
 };
 const MESSAGE_TYPE = {
   ADD: 'FILTER_COMPANY_NAME_ADD',
   CLEAR: 'FILTER_COMPANY_NAME_CLEAR',
+  DELETE: 'FILTER_COMPANY_NAME_DELETE',
 };
 
 // Get the selected text content
@@ -20,9 +20,8 @@ function getSelectedText() {
 
 class FilterExtension {
   constructor() {
-    this.FILTER_COMPANY_NAMES = FILTER_COMPANY_NAMES; // default filter company names
+    this.FILTER_COMPANY_NAMES = []; // default filter company names: [companyName1, companyName2]
     this.domMutationObserver = null;
-    this.defaultCompanyNames = null; // default filter names with cache
     this.storageCompanyNames = null; // cache the data retrieved from localStorage
     this.storageCompanyNamesTempCacheTime = 10 * 60 * 1000; // 10mins cache time
     this.storageDataTempCache = {};
@@ -56,7 +55,7 @@ class FilterExtension {
       }
     }
     !!this.removedCompanyNames &&
-      console.log(
+      console.warn(
         `%c [${this.removedCompanyNames}], Don't do any resistance, you have been killed!`,
         'font-size:13px; background:yellow; color:#bf2c9f;'
       );
@@ -85,20 +84,14 @@ class FilterExtension {
     };
     this.domMutationObserver.observe(document.body, observerOptions);
   }
-  // Handling all the filter company names from default/sync setting
+  // Handling all the filter company names from sync setting
   async getAllFilterCompanyNames() {
     const storageCompanyNames = await this.handleStorageSyncData('get', [
       STORAGE_KEY.FILTER_COMPANY_NAMES,
     ]);
-    this.storageCompanyNames = (
-      storageCompanyNames?.[STORAGE_KEY.FILTER_COMPANY_NAMES] || ''
-    )
-      .split(',')
-      .filter(Boolean);
-    this.defaultCompanyNames =
-      this.defaultCompanyNames ||
-      this.FILTER_COMPANY_NAMES.split(',').filter(Boolean);
-    return [...this.defaultCompanyNames, ...this.storageCompanyNames];
+    this.storageCompanyNames =
+      storageCompanyNames?.[STORAGE_KEY.FILTER_COMPANY_NAMES] || [];
+    return [...this.FILTER_COMPANY_NAMES, ...this.storageCompanyNames];
   }
   setIsFilterCompanyNamesChanged(method = '', key, changed) {
     return new Promise((resolve, reject) => {
@@ -123,14 +116,15 @@ class FilterExtension {
     const storageCompanyNames = await this.handleStorageSyncData('get', [
       STORAGE_KEY.FILTER_COMPANY_NAMES,
     ]);
-    const storageCompanyNamesStr =
-      storageCompanyNames?.[STORAGE_KEY.FILTER_COMPANY_NAMES] || '';
+    let storageCompanyNamesArray =
+      storageCompanyNames?.[STORAGE_KEY.FILTER_COMPANY_NAMES] || [];
+    storageCompanyNamesArray.push(selectionText);
+    storageCompanyNamesArray = Array.from(
+      new Set(storageCompanyNamesArray)
+    ).sort();
     this.handleStorageSyncData('set', {
-      [STORAGE_KEY.FILTER_COMPANY_NAMES]: `${storageCompanyNamesStr},${selectionText}`,
+      [STORAGE_KEY.FILTER_COMPANY_NAMES]: storageCompanyNamesArray,
     });
-  }
-  onClearAllCacheFilterCompanyNamesFromStorage() {
-    return this.handleStorageSyncData('clear');
   }
   async handleStorageSyncData(method = '', data = []) {
     return new Promise(async (resolve, reject) => {
@@ -184,6 +178,21 @@ class FilterExtension {
             resolve('done');
           });
           break;
+        case 'delete':
+          const storageCompanyNames = await this.handleStorageSyncData('get', [
+            STORAGE_KEY.FILTER_COMPANY_NAMES,
+          ]);
+          const storageCompanyNamesArray =
+            storageCompanyNames[STORAGE_KEY.FILTER_COMPANY_NAMES] || [];
+          for (let i = storageCompanyNamesArray.length - 1; i >= 0; i--) {
+            const element = storageCompanyNamesArray[i];
+            if (data.indexOf(element) >= 0) {
+              storageCompanyNamesArray.splice(i, 1);
+            }
+          }
+          return this.handleStorageSyncData('set', {
+            [STORAGE_KEY.FILTER_COMPANY_NAMES]: storageCompanyNamesArray,
+          });
         default:
           reject('No method provided');
       }
@@ -194,13 +203,13 @@ class FilterExtension {
     chrome.runtime.onMessage.addListener((e) => {
       switch (e.type) {
         case MESSAGE_TYPE.ADD:
-          this.onAddNewFilterCompanyNameToStorage(e.data);
-          break;
+          return this.onAddNewFilterCompanyNameToStorage(e.data);
         case MESSAGE_TYPE.CLEAR:
-          this.onClearAllCacheFilterCompanyNamesFromStorage();
-          break;
+          return this.handleStorageSyncData('clear');
+        case MESSAGE_TYPE.DELETE:
+          return this.handleStorageSyncData('delete', [e.data]);
         default:
-          break;
+          return Promise.resolve();
       }
     });
   }

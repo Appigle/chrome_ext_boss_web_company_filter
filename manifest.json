@@ -13,6 +13,9 @@
   "background": {
     "service_worker": "scripts/contextMenu.js"
   },
+  "action": {
+    "default_popup": "html/popup.html"
+  },
   "content_scripts": [
     {
       "js": [
@@ -26,6 +29,7 @@
   "short_name": "BWCF",
   "permissions": [
     "contextMenus",
-    "storage"
+    "storage",
+    "tabs"
   ]
 }
