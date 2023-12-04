@@ -1,10 +1,8 @@
-# Readme
-
----
+# README
 
 [English](README.md) | [中文](README_cn.md)
 
-# 公司过滤器 Chrome 扩展
+# 招聘公司过滤器 Chrome 扩展
 
 公司过滤器 Chrome 扩展允许用户在网络招聘平台上屏蔽特定的公司。它提供了一种方便的方式来过滤掉不想看到的公司，增强求职体验。
 
@@ -29,11 +27,13 @@
    - 右键点击所选的公司名称打开上下文菜单。
    - 选择上下文菜单中的"屏蔽公司"选项。
    - 与已屏蔽公司相关的职位列表将从页面中隐藏。
+     ![ContextMenu](./images/Menu%20Screenshot.png)
 
 3. 管理已屏蔽的公司：
    - 点击 Chrome 工具栏中的扩展图标。
    - 弹出窗口将显示已屏蔽的公司列表。
    - 要从过滤列表中移除公司，点击公司名称旁边的"X"按钮。
+     ![Manage Keywords](./images/Name%20List%20Screenshot.png)
 
 ## 许可证
 
