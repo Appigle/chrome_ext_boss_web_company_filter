@@ -1,10 +1,10 @@
-# README
+# Readme
 
 [English](README.md) | [中文](README_cn.md)
 
 # Company Filter Chrome Extension
 
-The Company Filter Chrome extension allows users to filter specific companies from being displayed on a web-based job recruitment platform. It provides a convenient way to filter out unwanted companies and enhance the job search experience.
+The Company Filter Chrome extension allows users to block specific companies from being displayed on a web-based job recruitment platform. It provides a convenient way to filter out unwanted companies and enhance the job search experience.
 
 ## Features
 
@@ -27,13 +27,11 @@ The Company Filter Chrome extension allows users to filter specific companies fr
    - Right-click on the selected company name to open the context menu.
    - Choose the "Block Company" option in the context menu.
    - The listings associated with the filtered company will be hidden from the page.
-     ![ContextMenu](./images/Menu%20Screenshot.png)
 
 3. Managing filtered companies:
    - Click on the extension icon in the Chrome toolbar.
    - A popup window will appear, displaying a list of filtered companies.
    - To remove a company from the filter list, click on the "X" button next to the company name.
-     ![Manage Keywords](./images/Name%20List%20Screenshot.png)
 
 ## License
 
